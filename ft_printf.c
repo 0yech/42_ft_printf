@@ -6,14 +6,92 @@
 /*   By: nrey <nrey@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 00:19:52 by nrey              #+#    #+#             */
-/*   Updated: 2024/10/13 03:07:08 by nrey             ###   ########.fr       */
+/*   Updated: 2024/10/15 06:14:00 by nrey             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft/libft.h"
 #include <stdarg.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include "ft_strdup.c"
+
+int	ft_printfchar(int c)
+{
+	write(1, &c, 1);
+	return (1);
+}
+
+int	ft_printfstr(char *str)
+{
+	int i;
+
+	i = 0;
+	while (str[i])
+	{
+		write(1, &str[i], 1);
+		i++;
+	}
+	return (i);
+}
+
+int	ft_putnbr_base(unsigned long n, char *base)
+{
+	unsigned long	baselen;
+	int				count;
+
+	count = 0;
+	baselen = 0;
+	while (base[baselen])
+		baselen++;
+	if (n >= baselen)
+	{
+		count += ft_putnbr_base(n / baselen, base);
+		count += ft_putnbr_base(n % baselen, base);
+	}
+	else
+	{
+		ft_printfchar(base[n]);
+		count++;
+	}
+	return (count);
+}
+
+static int	ft_printfhex(unsigned int n, char c)
+{
+	char	*base;
+	int		count;
+
+	if (c == 'x')
+		base = "0123456789abcdef";
+	else if (c == 'X')
+		base = "0123456789ABCDEF";
+	count += ft_putnbr_base((unsigned long)n, base);
+	return (count);
+}
+
+static int	ft_printfptr(void *ptr)
+{
+	int	count;
+
+	count = ft_printfstr("0x");
+	count += ft_putnbr_base((unsigned long)ptr, "0123456789abcdef");
+	return (count);
+}
+
+static size_t	unlen(unsigned int n)
+{
+	size_t	len;
+
+	len = 0;
+	if (n == 0)
+		len++;
+	while (n)
+	{
+		len++;
+		n /= 10;
+	}
+	return (len);
+}
 
 static size_t   nlen(int n)
 {
@@ -28,6 +106,24 @@ static size_t   nlen(int n)
                 n /= 10;
         }
         return (len);
+}
+
+char	*ft_unsigneditoa(unsigned int n)
+{
+	char	*s;
+	size_t	len;
+
+	len = unlen(n);
+	s = malloc(sizeof(char) * (len + 1));
+	if (!s)
+		return (NULL);
+	s[len] = '\0';
+	while (n != 0)
+	{
+		s[--len] = n % 10 + 48;
+		n = n / 10;
+	}
+	return (s);
 }
 
 void    appnbr(char *p, int n, int c)
@@ -63,23 +159,16 @@ char    *ft_itoa(int n)
         return (s);
 }
 
-int	ft_printfstr(char *str)
+int	ft_printfuint(unsigned int n)
 {
-	int i;
+	char	*p;
+	int		count;
 
-	i = 0;
-	while (str[i])
-	{
-		write(1, &str[i], 1);
-		i++;
-	}
-	return (i);
-}
-
-int	ft_printfchar(int c)
-{
-	write(1, &c, 1);
-	return (1);
+	p = ft_unsigneditoa(n);
+	count = ft_printfstr(p);
+	p = NULL;
+	free(p);
+	return (count);
 }
 
 int	ft_printfnbr(int nb)
@@ -103,8 +192,17 @@ int	ft_vartype(va_list args, char c)
 		count += ft_printfchar(va_arg(args, int));
 	else if (c == 's')
 		count += ft_printfstr(va_arg(args, char *));
-	else if (c == 'd')
+	else if (c == 'd' || c == 'i')
 		count += ft_printfnbr(va_arg(args, int));
+	else if (c == '%')
+		count += ft_printfchar(37);
+	else if (c == 'u')
+		count += ft_printfuint(va_arg(args, unsigned int));
+	else if (c == 'x' || c == 'X')
+		count += ft_printfhex(va_arg(args, unsigned int), c);
+	else if (c == 'p')
+		count += ft_printfptr(va_arg(args, void *));
+	return (count);
 }
 
 int	ft_printf(const char *str, ...)
@@ -127,14 +225,18 @@ int	ft_printf(const char *str, ...)
 			count += ft_printfchar(str[i]);
 		i++;
 	}
+	va_end(args);
 	return (count);
 }
 
 int	main(void)
 {
 	int	f;
+	char	*p;
 
-	f = ft_printf("Hello i am at %d", 42);
+	p = "marche";
+	f = ft_printf("Hello i am at %i\n", 42);
+	ft_printf("\npercent : %%\nchar : %c\nint : %d\nuint : %u\npointer : %p\nhex : %x\nhexMaj : %X\nstring : %s\n", 'a', 43, 42, p, 892, 892, p);
 	return (0);
 }
 /*
