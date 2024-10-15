@@ -6,7 +6,7 @@
 /*   By: nrey <nrey@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 14:13:24 by nrey              #+#    #+#             */
-/*   Updated: 2024/10/15 15:10:11 by nrey             ###   ########.fr       */
+/*   Updated: 2024/10/15 16:33:23 by nrey             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,8 @@ int	ft_printfuint(unsigned int n)
 
 	p = ft_unsigneditoa(n);
 	count = ft_printfstr(p);
-	p = NULL;
 	free(p);
+	p = NULL;
 	return (count);
 }
 
@@ -69,7 +69,7 @@ int	ft_printfnbr(int n)
 
 	p = ft_itoa(n);
 	count = ft_printfstr(p);
-	p = NULL;
 	free(p);
+	p = NULL;
 	return (count);
 }
