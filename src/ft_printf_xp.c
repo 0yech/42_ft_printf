@@ -6,7 +6,7 @@
 /*   By: nrey <nrey@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 14:06:16 by nrey              #+#    #+#             */
-/*   Updated: 2024/10/15 15:08:43 by nrey             ###   ########.fr       */
+/*   Updated: 2024/10/15 15:30:15 by nrey             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ int	ft_printfhex(unsigned int n, char c)
 	int		count;
 
 	count = 0;
+	base = "0";
 	if (c == 'x')
 		base = "0123456789abcdef";
 	else if (c == 'X')
