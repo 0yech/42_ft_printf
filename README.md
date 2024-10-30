@@ -1,6 +1,6 @@
 ![image](https://github.com/user-attachments/assets/94e4623d-3937-405a-a29d-4ba0c27c78d6)
 <img align="right" src="https://github.com/user-attachments/assets/43194195-0b3e-42e0-bfa4-e7bbd4bfb495"/>
-# ft_printf, recreating the infamous printf();
+# ft_printf - recreating the infamous printf();
 
 **Authorized external functions**
 
